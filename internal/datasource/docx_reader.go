@@ -16,6 +16,7 @@ const (
 )
 
 type SourcePosition struct {
+	Filename          string
 	Tag               string
 	KeyPhrase         string
 	ItemsDelimiter    string
@@ -36,23 +37,7 @@ type DocxReader struct {
 
 type Option func(*DocxReader)
 
-func NewDocxReader(filename string, options ...Option) (*DocxReader, error) {
-	file, err := os.Open(filename)
-	defer file.Close()
-	if err != nil {
-		return nil, err
-	}
-
-	fileInfo, err := file.Stat()
-	if err != nil {
-		return nil, err
-	}
-
-	doc, err := docx.Parse(file, fileInfo.Size())
-	if err != nil {
-		return nil, err
-	}
-
+func NewDocxReader(options ...Option) (*DocxReader, error) {
 	reader := DocxReader{
 		personsSources: nil,
 		termsSources:   nil,
@@ -66,42 +51,25 @@ func NewDocxReader(filename string, options ...Option) (*DocxReader, error) {
 		opt(&reader)
 	}
 
-	if len(reader.personsSources) != 0 {
-		for _, src := range reader.personsSources {
-			items, err := readSourceFromDocx(doc, src)
-			reader.persons = append(reader.persons, items...)
-			if err != nil {
-				return nil, err
-			}
+	sources := map[string][]SourcePosition{}
+	sources["persons"] = reader.personsSources
+	sources["terms"] = reader.termsSources
+	sources["dates"] = reader.datesSources
+
+	buckets := map[string][]SourceItem{}
+	buckets["persons"] = reader.persons
+	buckets["terms"] = reader.terms
+	buckets["dates"] = reader.dates
+
+	for name, source := range sources {
+		items, e := processSources(name, source)
+		if e != nil {
+			return nil, e
 		}
-	} else {
-		log.Println("Skipping persons sources...")
+		buckets[name] = items
 	}
 
-	if len(reader.datesSources) != 0 {
-		for _, src := range reader.datesSources {
-			items, err := readSourceFromDocx(doc, src)
-			reader.dates = append(reader.dates, items...)
-			if err != nil {
-				return nil, err
-			}
-		}
-	} else {
-		log.Println("Skipping dates source...")
-	}
-
-	if len(reader.termsSources) != 0 {
-		for _, src := range reader.termsSources {
-			items, err := readSourceFromDocx(doc, src)
-			reader.terms = append(reader.terms, items...)
-			if err != nil {
-				return nil, err
-			}
-		}
-	} else {
-		log.Println("Skipping term source...")
-	}
-
+	reader.persons, reader.terms, reader.dates = buckets["persons"], buckets["terms"], buckets["dates"]
 	return &reader, nil
 }
 
@@ -133,6 +101,47 @@ func (r *DocxReader) GetDates() []SourceItem {
 
 func (r *DocxReader) GetTerms() []SourceItem {
 	return r.terms
+}
+
+func processSources(sourceName string, sources []SourcePosition) ([]SourceItem, error) {
+	var res []SourceItem
+	if len(sources) != 0 {
+		log.Printf("Parsing %s sources...", sourceName)
+		for _, src := range sources {
+			doc, err := openDocument(src.Filename)
+			if err != nil {
+				return nil, err
+			}
+			items, err := readSourceFromDocx(doc, src)
+			if err != nil {
+				return nil, err
+			}
+			res = append(res, items...)
+		}
+	} else {
+		log.Printf("Skipping %s sources...\n", sourceName)
+	}
+	return res, nil
+}
+
+func openDocument(filename string) (*docx.Docx, error) {
+	file, err := os.Open(filename)
+	defer file.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	fileInfo, err := file.Stat()
+	if err != nil {
+		return nil, err
+	}
+
+	doc, err := docx.Parse(file, fileInfo.Size())
+	if err != nil {
+		return nil, err
+	}
+
+	return doc, nil
 }
 
 func readItemsFromTable(cell *docx.WTableCell, pos SourcePosition) ([]string, error) {
