@@ -1,8 +1,11 @@
 package main
 
 import (
+	"bismark/internal/ai"
 	"bismark/internal/datasource"
 	"fmt"
+	_ "github.com/joho/godotenv/autoload"
+	"os"
 )
 
 func main() {
@@ -104,4 +107,20 @@ func main() {
 		fmt.Printf("%s, %s, %s\n", p.Tag, p.Name, *p.Topic)
 	}
 
+	gigachat, err := ai.NewGigaChat(os.Getenv("CLIENT_ID"), os.Getenv("CLIENT_SECRET"), os.Getenv("GIGACHAT_MODEL"))
+
+	if err != nil {
+		panic(err)
+	}
+
+	llmCached := ai.NewChatProviderWithCache(gigachat)
+
+	response, err := llmCached.Ask(`Дай историческую характеристику главным событиям, происходившим "8 сентября 1943 года". Дай одноабзацный ответ в формате "<дата> - <описание исторического события>" без разметки`)
+	if err != nil {
+		panic(err)
+	}
+	if response.Successful {
+		fmt.Println("Successful")
+	}
+	fmt.Println(response.Answer)
 }
