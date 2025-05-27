@@ -25,7 +25,7 @@ func NewGigaChat(clientId string, clientSecret string, model string) (*GigaChat,
 	return &GigaChat{
 		client:      client,
 		model:       model,
-		temperature: 0.7,
+		temperature: 0.4,
 	}, nil
 }
 
@@ -39,10 +39,11 @@ func (g *GigaChat) Ask(request string) (ChatResponse, error) {
 		Model: g.model,
 		Messages: []gigachat.Message{
 			{
-				Role:    gigachat.UserRole,
+				Role:    gigachat.SystemRole,
 				Content: request,
 			},
 		},
+		Temperature:       &g.temperature,
 		N:                 &n,
 		Stream:            new(bool),
 		MaxTokens:         &maxTokens,
