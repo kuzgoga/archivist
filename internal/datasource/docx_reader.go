@@ -75,19 +75,19 @@ func NewDocxReader(options ...Option) (*DocxReader, error) {
 
 func WithPersons(sources ...SourcePosition) Option {
 	return func(reader *DocxReader) {
-		reader.personsSources = sources
+		reader.personsSources = append(reader.personsSources, sources...)
 	}
 }
 
 func WithTerms(sources ...SourcePosition) Option {
 	return func(reader *DocxReader) {
-		reader.termsSources = sources
+		reader.termsSources = append(reader.termsSources, sources...)
 	}
 }
 
 func WithDates(sources ...SourcePosition) Option {
 	return func(reader *DocxReader) {
-		reader.datesSources = sources
+		reader.datesSources = append(reader.datesSources, sources...)
 	}
 }
 
