@@ -13,6 +13,7 @@ type GigaChat struct {
 }
 
 func NewGigaChat(clientId string, clientSecret string, model string) (*GigaChat, error) {
+	patchDefaultClient()
 	client, err := gigachat.NewInsecureClient(clientId, clientSecret)
 	if err != nil {
 		return nil, err
@@ -62,7 +63,7 @@ func (g *GigaChat) Ask(request string) (ChatResponse, error) {
 	} else {
 		return ChatResponse{
 			Answer:     chat.Choices[0].Message.Content,
-			Successful: false,
+			Successful: true,
 		}, nil
 	}
 }

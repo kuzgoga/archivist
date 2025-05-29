@@ -6,6 +6,7 @@ import (
 	_ "embed"
 	"log"
 	"net/http"
+	"strings"
 	"sync"
 )
 
@@ -13,34 +14,57 @@ import (
 var rootCA []byte
 var lock sync.Once
 
-// patchDefaultTransport
-// Patch default transport and http client, if you are using gigachat LLM
-func patchDefaultTransport() {
+// patchDefaultClient Patch default transport and http client, if you are using gigachat LLM
+func patchDefaultClient() {
 	lock.Do(func() {
-		sysPool, err := x509.SystemCertPool()
-		if err != nil {
-			log.Printf("Warning: failed to load system cert pool: %v; creating a new one", err)
-			sysPool = x509.NewCertPool()
-		}
-		if sysPool == nil {
-			sysPool = x509.NewCertPool()
+		sysTr := http.DefaultTransport
+
+		minTr := &http.Transport{
+			TLSClientConfig: &tls.Config{
+				RootCAs:    makeCombinedPool(),
+				MinVersion: tls.VersionTLS12,
+			},
 		}
 
-		if ok := sysPool.AppendCertsFromPEM(rootCA); !ok {
-			log.Fatal("Failed to append root CA certificates to the pool")
+		smartTr := &switchingTransport{
+			defaultTransport:  sysTr,
+			gigachatTransport: minTr,
 		}
 
-		tlsCfg := &tls.Config{
-			RootCAs:    sysPool,
-			MinVersion: tls.VersionTLS12,
-		}
-
-		customTransport := &http.Transport{
-			TLSClientConfig: tlsCfg,
-		}
-
-		http.DefaultTransport = customTransport
-		http.DefaultClient = &http.Client{Transport: customTransport}
+		http.DefaultClient = &http.Client{Transport: smartTr}
 	})
+}
 
+var trustedHosts = []string{
+	"ngw.devices.sberbank.ru",
+	"gigachat.devices.sberbank.ru",
+}
+
+type switchingTransport struct {
+	defaultTransport  http.RoundTripper
+	gigachatTransport http.RoundTripper
+}
+
+func makeCombinedPool() *x509.CertPool {
+	pool, err := x509.SystemCertPool()
+	if err != nil || pool == nil {
+		log.Printf("Warning: failed to load system cert pool: %v", err)
+		pool = x509.NewCertPool()
+	}
+
+	if ok := pool.AppendCertsFromPEM(rootCA); !ok {
+		log.Fatal("Failed to append MinCifra certificates")
+	}
+
+	return pool
+}
+
+func (s *switchingTransport) RoundTrip(req *http.Request) (*http.Response, error) {
+	host := req.URL.Hostname()
+	for _, trusted := range trustedHosts {
+		if strings.HasSuffix(host, trusted) {
+			return s.gigachatTransport.RoundTrip(req)
+		}
+	}
+	return s.defaultTransport.RoundTrip(req)
 }
