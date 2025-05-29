@@ -4,6 +4,7 @@ import (
 	"bismark/internal/ai"
 	"bismark/internal/ai/copilot"
 	"bismark/internal/datasource"
+	"bismark/internal/export"
 	"bismark/internal/pipeline"
 	"fmt"
 	_ "github.com/joho/godotenv/autoload"
@@ -16,7 +17,7 @@ func main() {
 		datasource.WithPersons(
 			datasource.SourcePosition{
 				Filename:          "memo_history.docx",
-				Tag:               "10ClassWorldPersons",
+				Tag:               "Всеобщая история. 10 класс. Персоналии",
 				KeyPhrase:         "Вильгельм II",
 				ItemsDelimiter:    ",",
 				TopicsDelimiter:   &topicDelimiter,
@@ -29,7 +30,7 @@ func main() {
 		datasource.WithDates(
 			datasource.SourcePosition{
 				Filename:          "memo_history.docx",
-				Tag:               "10ClassWorldDates",
+				Tag:               "Всеобщая история. 10 класс. Хронология",
 				KeyPhrase:         "28 июня 1914",
 				ItemsDelimiter:    ",",
 				TrimSpaces:        true,
@@ -42,7 +43,7 @@ func main() {
 		datasource.WithTerms(
 			datasource.SourcePosition{
 				Filename:          "memo_history.docx",
-				Tag:               "10ClassWorldTerms",
+				Tag:               "Всеобщая история. 10 класс. Термины",
 				KeyPhrase:         "I Балканская война",
 				ItemsDelimiter:    ",",
 				TrimSpaces:        true,
@@ -55,7 +56,7 @@ func main() {
 		datasource.WithPersons(
 			datasource.SourcePosition{
 				Filename:          "memo_history.docx",
-				Tag:               "10ClassRuPersons",
+				Tag:               "История России. 10 класс. Персоналии",
 				KeyPhrase:         "Николай Андреев",
 				ItemsDelimiter:    ",",
 				TopicsDelimiter:   &topicDelimiter,
@@ -68,7 +69,7 @@ func main() {
 		datasource.WithDates(
 			datasource.SourcePosition{
 				Filename:          "memo_history.docx",
-				Tag:               "10ClassRuDates",
+				Tag:               "История России. 10 класс. Даты",
 				KeyPhrase:         "17 (30) июля 1914 года",
 				ItemsDelimiter:    ",",
 				TrimSpaces:        true,
@@ -81,7 +82,7 @@ func main() {
 		datasource.WithTerms(
 			datasource.SourcePosition{
 				Filename:          "memo_history.docx",
-				Tag:               "10ClassRuTerms",
+				Tag:               "История России. 10 класс. Термины",
 				KeyPhrase:         "аграрный вопрос",
 				ItemsDelimiter:    ",",
 				TrimSpaces:        true,
@@ -105,13 +106,8 @@ func main() {
 
 	res := pipeline.ProcessDatasourceItems(ds, llmCached)
 
-	for _, item := range res.Persons {
-		fmt.Printf("%s: %s: %s\n", item.Tag, item.Topic, item.Summary)
-	}
-	for _, item := range res.Dates {
-		fmt.Printf("%s: %s: %s\n", item.Tag, item.Topic, item.Summary)
-	}
-	for _, item := range res.Terms {
-		fmt.Printf("%s: %s: %s\n", item.Tag, item.Topic, item.Summary)
+	err = export.ToPdf(res)
+	if err != nil {
+		fmt.Printf("Export error occured: %s", err)
 	}
 }

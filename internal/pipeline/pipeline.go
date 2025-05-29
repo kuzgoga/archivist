@@ -48,7 +48,6 @@ func processItemsList(source []datasource.SourceItem, llm ai.ChatProvider, promp
 			_ = bar.Add(1)
 			continue
 		}
-		fmt.Println(response.Answer) // TODO: remove
 
 		var topic string
 		if el.Topic != nil {
