@@ -1,4 +1,4 @@
-package ai
+package gigachat
 
 import (
 	"crypto/tls"

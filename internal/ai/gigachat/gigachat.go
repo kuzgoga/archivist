@@ -1,6 +1,7 @@
-package ai
+package gigachat
 
 import (
+	"bismark/internal/ai"
 	"errors"
 	"fmt"
 	"github.com/paulrzcz/go-gigachat"
@@ -30,7 +31,7 @@ func NewGigaChat(clientId string, clientSecret string, model string) (*GigaChat,
 	}, nil
 }
 
-func (g *GigaChat) Ask(request string) (ChatResponse, error) {
+func (g *GigaChat) Ask(request string) (ai.ChatResponse, error) {
 	var n int64 = 1
 	var maxTokens int64 = 120
 	var repetitionPenalty = 1.1
@@ -51,17 +52,17 @@ func (g *GigaChat) Ask(request string) (ChatResponse, error) {
 		RepetitionPenalty: &repetitionPenalty,
 	})
 	if err != nil {
-		return ChatResponse{}, err
+		return ai.ChatResponse{}, err
 	}
 
 	if chat.Choices[0].FinishReason != normalFinishingReason {
 		fmt.Println(chat.Choices[0].FinishReason)
-		return ChatResponse{
+		return ai.ChatResponse{
 			Answer:     chat.Choices[0].Message.Content,
 			Successful: false,
 		}, errors.New("unexpected finishing reason")
 	} else {
-		return ChatResponse{
+		return ai.ChatResponse{
 			Answer:     chat.Choices[0].Message.Content,
 			Successful: true,
 		}, nil

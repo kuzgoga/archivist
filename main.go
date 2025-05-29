@@ -2,10 +2,11 @@ package main
 
 import (
 	"bismark/internal/ai"
+	"bismark/internal/ai/copilot"
 	"bismark/internal/datasource"
+	"bismark/internal/pipeline"
 	"fmt"
 	_ "github.com/joho/godotenv/autoload"
-	"os"
 )
 
 func main() {
@@ -95,32 +96,22 @@ func main() {
 		panic(err)
 	}
 
-	for _, p := range ds.GetPersons() {
-		fmt.Printf("%s, %s, %s\n", p.Tag, p.Name, *p.Topic)
-	}
-
-	for _, p := range ds.GetDates() {
-		fmt.Printf("%s, %s, %s\n", p.Tag, p.Name, *p.Topic)
-	}
-
-	for _, p := range ds.GetTerms() {
-		fmt.Printf("%s, %s, %s\n", p.Tag, p.Name, *p.Topic)
-	}
-
-	gigachat, err := ai.NewGigaChat(os.Getenv("CLIENT_ID"), os.Getenv("CLIENT_SECRET"), os.Getenv("GIGACHAT_MODEL"))
-
+	//gigaChat := openai.NewClient(os.Getenv("OPENAI_API_KEY"), shared.ChatModelGPT4oMini)
+	gigaChat, err := copilot.NewClient()
 	if err != nil {
 		panic(err)
 	}
+	llmCached := ai.NewChatProviderWithCache(gigaChat)
 
-	llmCached := ai.NewChatProviderWithCache(gigachat)
+	res := pipeline.ProcessDatasourceItems(ds, llmCached)
 
-	response, err := llmCached.Ask(`Дай историческую характеристику главным событиям, происходившим "8 сентября 1943 года". Дай одноабзацный ответ в формате "<дата> - <описание исторического события>" без разметки`)
-	if err != nil {
-		panic(err)
+	for _, item := range res.Persons {
+		fmt.Printf("%s: %s: %s\n", item.Tag, item.Topic, item.Summary)
 	}
-	if response.Successful {
-		fmt.Println("Successful")
+	for _, item := range res.Dates {
+		fmt.Printf("%s: %s: %s\n", item.Tag, item.Topic, item.Summary)
 	}
-	fmt.Println(response.Answer)
+	for _, item := range res.Terms {
+		fmt.Printf("%s: %s: %s\n", item.Tag, item.Topic, item.Summary)
+	}
 }
