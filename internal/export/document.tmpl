@@ -1,8 +1,10 @@
+#set page(numbering: "1")
 = {{.Tag}}
 
 {{range .Topics}}== {{.Topic}}
 
-{{range .Items}}{{highlight .Summary}}
+{{range .Items}}#set par(justify: true)
+{{highlight .Summary}}
 
 
 {{end}}{{end}}

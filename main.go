@@ -16,7 +16,7 @@ func main() {
 	ds, err := datasource.NewDocxReader(
 		datasource.WithPersons(
 			datasource.SourcePosition{
-				Filename:          "memo_history.docx",
+				Filename:          "assets/10_memo_history.docx",
 				Tag:               "Всеобщая история. 10 класс. Персоналии",
 				KeyPhrase:         "Вильгельм II",
 				ItemsDelimiter:    ",",
@@ -29,7 +29,7 @@ func main() {
 
 		datasource.WithDates(
 			datasource.SourcePosition{
-				Filename:          "memo_history.docx",
+				Filename:          "assets/10_memo_history.docx",
 				Tag:               "Всеобщая история. 10 класс. Хронология",
 				KeyPhrase:         "28 июня 1914",
 				ItemsDelimiter:    ",",
@@ -42,7 +42,7 @@ func main() {
 
 		datasource.WithTerms(
 			datasource.SourcePosition{
-				Filename:          "memo_history.docx",
+				Filename:          "assets/10_memo_history.docx",
 				Tag:               "Всеобщая история. 10 класс. Термины",
 				KeyPhrase:         "I Балканская война",
 				ItemsDelimiter:    ",",
@@ -55,7 +55,7 @@ func main() {
 
 		datasource.WithPersons(
 			datasource.SourcePosition{
-				Filename:          "memo_history.docx",
+				Filename:          "assets/10_memo_history.docx",
 				Tag:               "История России. 10 класс. Персоналии",
 				KeyPhrase:         "Николай Андреев",
 				ItemsDelimiter:    ",",
@@ -68,7 +68,7 @@ func main() {
 
 		datasource.WithDates(
 			datasource.SourcePosition{
-				Filename:          "memo_history.docx",
+				Filename:          "assets/10_memo_history.docx",
 				Tag:               "История России. 10 класс. Даты",
 				KeyPhrase:         "17 (30) июля 1914 года",
 				ItemsDelimiter:    ",",
@@ -81,7 +81,7 @@ func main() {
 
 		datasource.WithTerms(
 			datasource.SourcePosition{
-				Filename:          "memo_history.docx",
+				Filename:          "assets/10_memo_history.docx",
 				Tag:               "История России. 10 класс. Термины",
 				KeyPhrase:         "аграрный вопрос",
 				ItemsDelimiter:    ",",
@@ -89,6 +89,27 @@ func main() {
 				RemoveTrailingDot: true,
 				IsTable:           true,
 				TopicsDelimiter:   &topicDelimiter,
+			},
+		),
+
+		datasource.WithPersons(
+			datasource.SourcePosition{
+				Filename:          "assets/10_memo.docx",
+				Tag:               "Обществознание. 10 класс. Персоналии",
+				KeyPhrase:         "Аврелий Августин Иппонийский",
+				ItemsDelimiter:    ",",
+				TrimSpaces:        true,
+				RemoveTrailingDot: true,
+			},
+		),
+		datasource.WithTerms(
+			datasource.SourcePosition{
+				Filename:          "assets/10_memo.docx",
+				Tag:               "Обществознание. 10 класс. Термины",
+				KeyPhrase:         "адаптация",
+				ItemsDelimiter:    ",",
+				TrimSpaces:        true,
+				RemoveTrailingDot: true,
 			},
 		),
 	)
