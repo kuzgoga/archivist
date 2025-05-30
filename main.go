@@ -6,8 +6,8 @@ import (
 	"bismark/internal/datasource"
 	"bismark/internal/export"
 	"bismark/internal/pipeline"
-	"fmt"
 	_ "github.com/joho/godotenv/autoload"
+	"log"
 )
 
 func main() {
@@ -94,25 +94,22 @@ func main() {
 	)
 
 	if err != nil {
-		panic(err)
+		log.Fatalln(err)
 	}
 
-	//gigaChat := openai.NewClient(os.Getenv("OPENAI_API_KEY"), shared.ChatModelGPT4oMini)
-	gigaChat, err := copilot.NewClient()
+	copilotApi, err := copilot.NewClient()
 	if err != nil {
-		panic(err)
+		log.Fatalln(err)
 	}
-	llmCached := ai.NewChatProviderWithCache(gigaChat)
+
+	llmCached := ai.NewChatProviderWithCache(copilotApi)
 	defer llmCached.Close()
 
 	res := pipeline.ProcessDatasourceItems(ds, llmCached)
 
-	err = export.ToPdf(res, export.Parcel{
-		PersonsPerFile: 10,
-		TermsPerFile:   10,
-		DatesPerFile:   5,
-	})
+	err = export.ToPdf(res)
+
 	if err != nil {
-		fmt.Printf("Export error occured: %s", err)
+		log.Fatalf("Export error occured: %s\n", err)
 	}
 }
