@@ -107,7 +107,11 @@ func main() {
 
 	res := pipeline.ProcessDatasourceItems(ds, llmCached)
 
-	err = export.ToPdf(res)
+	err = export.ToPdf(res, export.Parcel{
+		PersonsPerFile: 10,
+		TermsPerFile:   10,
+		DatesPerFile:   5,
+	})
 	if err != nil {
 		fmt.Printf("Export error occured: %s", err)
 	}

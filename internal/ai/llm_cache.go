@@ -12,7 +12,6 @@ type ChatProviderWithCache struct {
 }
 
 func NewChatProviderWithCache(provider ChatProvider) *ChatProviderWithCache {
-	// Configure optimal Badger options
 	opts := badger.DefaultOptions("llmcache")
 	opts.Logger = nil
 

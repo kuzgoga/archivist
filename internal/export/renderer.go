@@ -13,7 +13,7 @@ import (
 //go:embed document.tmpl
 var documentTemplate string
 
-func ToPdf(data pipeline.Result) error {
+func ToPdf(data pipeline.Result, parceling ...Parcel) error {
 	persons := groupInOrder(data.Persons)
 	terms := groupInOrder(data.Terms)
 	dates := groupInOrder(data.Dates)
@@ -42,8 +42,9 @@ func ToPdf(data pipeline.Result) error {
 }
 
 func RenderFile(group TagGroup) error {
-	filename := group.Tag + ".typ"
-	filenamePdf := group.Tag + ".pdf"
+	EnsureDataFolder()
+	filename := "output/" + group.Tag + ".typ"
+	filenamePdf := "output/" + group.Tag + ".pdf"
 
 	f, err := os.Create(filename)
 	defer f.Close()
@@ -90,5 +91,17 @@ func HighlightItem(summary string) string {
 		return "*" + summary[:dashIndex] + "*" + summary[dashIndex:]
 	} else {
 		return "*" + summary[:bracketIndex] + "*" + summary[bracketIndex:]
+	}
+}
+
+func EnsureDataFolder() {
+	const path = "output"
+
+	if _, e := os.Stat(path); os.IsNotExist(e) {
+		err := os.MkdirAll(path, 0755)
+		if err != nil {
+			log.Fatalf("Failed to create directory %s: %s", path, err)
+		}
+		log.Printf("Created data directory: %s", path)
 	}
 }
