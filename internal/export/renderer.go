@@ -18,21 +18,21 @@ func ToPdf(data pipeline.Result) error {
 	terms := groupInOrder(data.Terms)
 	dates := groupInOrder(data.Dates)
 	for _, person := range persons {
-		err := RenderFile(person, "")
+		err := RenderFile(person)
 		if err != nil {
 			return err
 		}
 	}
 
 	for _, term := range terms {
-		err := RenderFile(term, "")
+		err := RenderFile(term)
 		if err != nil {
 			return err
 		}
 	}
 
 	for _, date := range dates {
-		err := RenderFile(date, "")
+		err := RenderFile(date)
 		if err != nil {
 			return err
 		}
@@ -41,9 +41,9 @@ func ToPdf(data pipeline.Result) error {
 	return nil
 }
 
-func RenderFile(group TagGroup, filePostfix string) error {
-	filename := group.Tag + filePostfix + ".typ"
-	filenamePdf := group.Tag + filePostfix + ".pdf"
+func RenderFile(group TagGroup) error {
+	filename := group.Tag + ".typ"
+	filenamePdf := group.Tag + ".pdf"
 
 	f, err := os.Create(filename)
 	defer f.Close()
