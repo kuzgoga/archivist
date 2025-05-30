@@ -2,32 +2,35 @@ package ai
 
 import (
 	"errors"
-	"log"
-
 	"github.com/dgraph-io/badger/v4"
+	"log"
 )
 
 type ChatProviderWithCache struct {
 	provider ChatProvider
+	db       *badger.DB
 }
 
 func NewChatProviderWithCache(provider ChatProvider) *ChatProviderWithCache {
+	// Configure optimal Badger options
+	opts := badger.DefaultOptions("llmcache")
+	opts.Logger = nil
+
+	db, err := badger.Open(opts)
+	if err != nil {
+		log.Printf("Failed to open Badger DB: %v, falling back to uncached mode", err)
+		return &ChatProviderWithCache{provider: provider}
+	}
+
 	return &ChatProviderWithCache{
 		provider: provider,
+		db:       db,
 	}
 }
 
 func (c *ChatProviderWithCache) Ask(request string) (ChatResponse, error) {
-	badgerOptions := badger.DefaultOptions("llmcache")
-	badgerOptions.Logger = nil
-	db, err := badger.Open(badgerOptions)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer db.Close()
-
 	var cachedValue string
-	err = db.View(func(txn *badger.Txn) error {
+	err := c.db.View(func(txn *badger.Txn) error {
 		item, e := txn.Get([]byte(request))
 		if e != nil {
 			return e
@@ -50,15 +53,26 @@ func (c *ChatProviderWithCache) Ask(request string) (ChatResponse, error) {
 		if errProvider != nil {
 			return response, errProvider
 		}
-		err = db.Update(func(txn *badger.Txn) error {
+
+		err = c.db.Update(func(txn *badger.Txn) error {
 			return txn.Set([]byte(request), []byte(response.Answer))
 		})
+
 		if err != nil {
-			log.Fatal(err)
+			log.Printf("Failed to cache response: %v", err)
 		}
+
 		return response, nil
 	} else {
-		log.Fatal(err)
+		log.Printf("LLM cache read error: %v", err)
+		return c.provider.Ask(request)
 	}
-	return ChatResponse{}, err
+}
+
+func (c *ChatProviderWithCache) Close() {
+	if c.db != nil {
+		if err := c.db.Close(); err != nil {
+			log.Printf("Error closing Badger DB: %v", err)
+		}
+	}
 }

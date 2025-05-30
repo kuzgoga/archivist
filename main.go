@@ -103,6 +103,7 @@ func main() {
 		panic(err)
 	}
 	llmCached := ai.NewChatProviderWithCache(gigaChat)
+	defer llmCached.Close()
 
 	res := pipeline.ProcessDatasourceItems(ds, llmCached)
 
