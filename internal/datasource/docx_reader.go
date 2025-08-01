@@ -2,10 +2,11 @@ package datasource
 
 import (
 	"errors"
-	"github.com/fumiama/go-docx"
 	"log"
 	"os"
 	"strings"
+
+	"github.com/fumiama/go-docx"
 )
 
 const (

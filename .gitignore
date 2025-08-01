@@ -1,7 +1,6 @@
 .env
 wikicache
-llmcache
-*cache*
+llmcache*
 *.pdf
 *.typ
 output

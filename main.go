@@ -6,8 +6,9 @@ import (
 	"bismark/internal/datasource"
 	"bismark/internal/export"
 	"bismark/internal/pipeline"
-	_ "github.com/joho/godotenv/autoload"
 	"log"
+
+	_ "github.com/joho/godotenv/autoload"
 )
 
 func main() {
