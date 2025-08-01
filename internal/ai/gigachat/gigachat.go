@@ -1,9 +1,10 @@
 package gigachat
 
 import (
-	"bismark/internal/ai"
+	"archivist/internal/ai"
 	"errors"
 	"fmt"
+
 	"github.com/paulrzcz/go-gigachat"
 )
 

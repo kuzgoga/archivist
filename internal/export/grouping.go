@@ -1,6 +1,6 @@
 package export
 
-import "bismark/internal/pipeline"
+import "archivist/internal/pipeline"
 
 type ShortItem struct {
 	Name    string

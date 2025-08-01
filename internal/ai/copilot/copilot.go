@@ -1,14 +1,15 @@
 package copilot
 
 import (
-	"bismark/internal/ai"
+	"archivist/internal/ai"
 	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
-	copilotApi "github.com/stong1994/github-copilot-api"
 	"math/rand"
 	"time"
+
+	copilotApi "github.com/stong1994/github-copilot-api"
 )
 
 type Client struct {

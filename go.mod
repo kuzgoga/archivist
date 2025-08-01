@@ -1,4 +1,4 @@
-module bismark
+module archivist
 
 go 1.24
 
@@ -6,7 +6,10 @@ require (
 	github.com/dgraph-io/badger/v4 v4.7.0
 	github.com/fumiama/go-docx v0.0.0-20250506085032-0c30fd09304b
 	github.com/joho/godotenv v1.5.1
+	github.com/openai/openai-go v1.1.0
 	github.com/paulrzcz/go-gigachat v0.1.2
+	github.com/schollz/progressbar/v3 v3.18.0
+	github.com/stong1994/github-copilot-api v0.0.0-20241128162310-fa83a9d9fc9b
 	github.com/trietmn/go-wiki v1.0.4
 	golang.org/x/text v0.25.0
 )
@@ -23,10 +26,7 @@ require (
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/klauspost/compress v1.18.0 // indirect
 	github.com/mitchellh/colorstring v0.0.0-20190213212951-d06e56a500db // indirect
-	github.com/openai/openai-go v1.1.0 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
-	github.com/schollz/progressbar/v3 v3.18.0 // indirect
-	github.com/stong1994/github-copilot-api v0.0.0-20241128162310-fa83a9d9fc9b // indirect
 	github.com/tidwall/gjson v1.18.0 // indirect
 	github.com/tidwall/match v1.1.1 // indirect
 	github.com/tidwall/pretty v1.2.1 // indirect

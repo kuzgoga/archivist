@@ -1,9 +1,10 @@
 package openai
 
 import (
-	"bismark/internal/ai"
+	"archivist/internal/ai"
 	"context"
 	"errors"
+
 	"github.com/openai/openai-go"
 	"github.com/openai/openai-go/option"
 	"github.com/openai/openai-go/shared"

@@ -1,11 +1,11 @@
 package main
 
 import (
-	"bismark/internal/ai"
-	"bismark/internal/ai/copilot"
-	"bismark/internal/datasource"
-	"bismark/internal/export"
-	"bismark/internal/pipeline"
+	"archivist/internal/ai"
+	"archivist/internal/ai/copilot"
+	"archivist/internal/datasource"
+	"archivist/internal/export"
+	"archivist/internal/pipeline"
 	"log"
 
 	_ "github.com/joho/godotenv/autoload"

@@ -1,7 +1,7 @@
 package export
 
 import (
-	"bismark/internal/pipeline"
+	"archivist/internal/pipeline"
 	_ "embed"
 	"log"
 	"os"
@@ -47,7 +47,7 @@ func RenderFile(group TagGroup) error {
 	filenamePdf := "output/" + group.Tag + ".pdf"
 
 	f, err := os.Create(filename)
-	defer f.Close()
+	defer func() { f.Close() }()
 	if err != nil {
 		return err
 	}

@@ -1,11 +1,12 @@
 package pipeline
 
 import (
-	"bismark/internal/ai"
-	"bismark/internal/datasource"
+	"archivist/internal/ai"
+	"archivist/internal/datasource"
 	"fmt"
-	"github.com/schollz/progressbar/v3"
 	"log"
+
+	"github.com/schollz/progressbar/v3"
 )
 
 type CompleteItem struct {
