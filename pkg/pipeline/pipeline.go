@@ -1,8 +1,8 @@
 package pipeline
 
 import (
-	"archivist/internal/ai"
-	"archivist/internal/datasource"
+	"archivist/pkg/ai"
+	"archivist/pkg/datasource"
 	"fmt"
 	"log"
 

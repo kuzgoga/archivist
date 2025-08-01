@@ -1,7 +1,7 @@
 package openai
 
 import (
-	"archivist/internal/ai"
+	"archivist/pkg/ai"
 	"context"
 	"errors"
 

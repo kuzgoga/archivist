@@ -1,7 +1,7 @@
 package gigachat
 
 import (
-	"archivist/internal/ai"
+	"archivist/pkg/ai"
 	"errors"
 	"fmt"
 

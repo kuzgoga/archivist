@@ -1,6 +1,6 @@
 package export
 
-import "archivist/internal/pipeline"
+import "archivist/pkg/pipeline"
 
 type ShortItem struct {
 	Name    string

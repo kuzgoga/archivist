@@ -1,7 +1,7 @@
 package copilot
 
 import (
-	"archivist/internal/ai"
+	"archivist/pkg/ai"
 	"context"
 	"encoding/json"
 	"errors"

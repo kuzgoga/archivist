@@ -1,7 +1,7 @@
 package export
 
 import (
-	"archivist/internal/pipeline"
+	"archivist/pkg/pipeline"
 	_ "embed"
 	"log"
 	"os"

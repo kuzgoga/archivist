@@ -1,11 +1,11 @@
 package main
 
 import (
-	"archivist/internal/ai"
-	"archivist/internal/ai/copilot"
-	"archivist/internal/datasource"
-	"archivist/internal/export"
-	"archivist/internal/pipeline"
+	"archivist/pkg/ai"
+	"archivist/pkg/ai/copilot"
+	"archivist/pkg/datasource"
+	"archivist/pkg/export"
+	"archivist/pkg/pipeline"
 	"log"
 
 	_ "github.com/joho/godotenv/autoload"
