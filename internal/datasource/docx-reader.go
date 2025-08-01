@@ -127,7 +127,12 @@ func processSources(sourceName string, sources []SourcePosition) ([]SourceItem, 
 
 func openDocument(filename string) (*docx.Docx, error) {
 	file, err := os.Open(filename)
-	defer file.Close()
+	defer func() {
+		err := file.Close()
+		if err != nil {
+			log.Fatalf("Failed to close file: %v", err)
+		}
+	}()
 	if err != nil {
 		return nil, err
 	}
@@ -238,9 +243,8 @@ func parseItemsFromParagraphs(pos SourcePosition, paragraphs []string) ([]Source
 
 func findParagraphByPhrase(doc *docx.Docx, phrase string) *docx.Paragraph {
 	for _, it := range doc.Document.Body.Items {
-		switch it.(type) {
+		switch p := it.(type) {
 		case *docx.Paragraph:
-			p := it.(*docx.Paragraph)
 			if strings.Contains(p.String(), phrase) {
 				return p
 			}
@@ -251,10 +255,9 @@ func findParagraphByPhrase(doc *docx.Docx, phrase string) *docx.Paragraph {
 
 func findTableByPhrase(doc *docx.Docx, phrase string) *docx.WTableCell {
 	for _, it := range doc.Document.Body.Items {
-		switch it.(type) {
+		switch v := it.(type) {
 		case *docx.Table:
-			t := it.(*docx.Table)
-			for _, row := range t.TableRows {
+			for _, row := range v.TableRows {
 				for _, cell := range row.TableCells {
 					for _, p := range cell.Paragraphs {
 						if strings.Contains(p.String(), phrase) {
