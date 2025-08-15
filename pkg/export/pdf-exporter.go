@@ -13,26 +13,36 @@ import (
 //go:embed document.tmpl
 var documentTemplate string
 
-func ToPdf(data pipeline.Result, parceling ...Parcel) error {
+type PdfExporter struct{}
+
+func CreatePdfExporter() Exporter {
+	return &PdfExporter{}
+}
+
+func (p *PdfExporter) Export(data pipeline.Result) error {
+	return p.ExportWithParceling(data)
+}
+
+func (p *PdfExporter) ExportWithParceling(data pipeline.Result, parceling ...Parcel) error {
 	persons := groupInOrder(data.Persons)
 	terms := groupInOrder(data.Terms)
 	dates := groupInOrder(data.Dates)
 	for _, person := range persons {
-		err := RenderFile(person)
+		err := RenderTypstFile(person)
 		if err != nil {
 			return err
 		}
 	}
 
 	for _, term := range terms {
-		err := RenderFile(term)
+		err := RenderTypstFile(term)
 		if err != nil {
 			return err
 		}
 	}
 
 	for _, date := range dates {
-		err := RenderFile(date)
+		err := RenderTypstFile(date)
 		if err != nil {
 			return err
 		}
@@ -41,7 +51,7 @@ func ToPdf(data pipeline.Result, parceling ...Parcel) error {
 	return nil
 }
 
-func RenderFile(group TagGroup) error {
+func RenderTypstFile(group TagGroup) error {
 	EnsureDataFolder()
 	filename := "output/" + group.Tag + ".typ"
 	filenamePdf := "output/" + group.Tag + ".pdf"

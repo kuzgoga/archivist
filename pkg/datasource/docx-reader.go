@@ -17,14 +17,14 @@ const (
 )
 
 type SourcePosition struct {
-	Filename          string
-	Tag               string
-	KeyPhrase         string
-	ItemsDelimiter    string
-	TrimSpaces        bool
-	RemoveTrailingDot bool
-	IsTable           bool
-	TopicsDelimiter   *string
+	Filename          string  `yaml:"filename" validate:"required"`
+	Tag               string  `yaml:"tag" validate:"required"`
+	KeyPhrase         string  `yaml:"keyphrase" validate:"required"`
+	ItemsDelimiter    string  `yaml:"itemsDelimeter" validate:"required"`
+	TrimSpaces        bool    `yaml:"trimSpaces" validate:"required"`
+	RemoveTrailingDot bool    `yaml:"removeTrailingDot" validate:"required"`
+	IsTable           bool    `yaml:"isTable"`
+	TopicsDelimiter   *string `yaml:"topicsDelimeter,omitempty"`
 }
 
 type DocxReader struct {

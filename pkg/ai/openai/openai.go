@@ -15,8 +15,12 @@ type Client struct {
 	model  shared.ChatModel
 }
 
-func NewClient(apiKey string, model shared.ChatModel) *Client {
-	client := openai.NewClient(option.WithAPIKey(apiKey))
+func NewClient(apiKey string, model shared.ChatModel, baseUrl *string) *Client {
+	var options []option.RequestOption = []option.RequestOption{option.WithAPIKey(apiKey)}
+	if baseUrl != nil {
+		options = append(options, option.WithBaseURL(*baseUrl))
+	}
+	client := openai.NewClient(options...)
 	return &Client{
 		client: &client,
 		model:  model,
