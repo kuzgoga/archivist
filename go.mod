@@ -13,7 +13,7 @@ require (
 	github.com/schollz/progressbar/v3 v3.18.0
 	github.com/stong1994/github-copilot-api v0.0.0-20241128162310-fa83a9d9fc9b
 	github.com/trietmn/go-wiki v1.0.4
-	golang.org/x/text v0.25.0
+	golang.org/x/text v0.26.0
 )
 
 require (

@@ -122,9 +122,16 @@ func CreateDataSource(config *Config) datasource.Datasource {
 func BuildApplication(configFile string) *Application {
 	config := LoadConfig(configFile)
 
+	fillDefaultValues(config)
+
 	aiProvider := CreateAiProvider(config)
 	dataSource := CreateDataSource(config)
-	exporter := export.CreatePdfExporter()
+	exporter := export.CreatePdfExporter(
+		config.Exporter.PersonsParts,
+		config.Exporter.TermsParts,
+		config.Exporter.DatesParts,
+		*config.Exporter.DeleteTypstFiles,
+	)
 
 	return &Application{
 		DataSource: dataSource,

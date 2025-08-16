@@ -20,9 +20,9 @@ type SourcePosition struct {
 	Filename          string  `yaml:"filename" validate:"required"`
 	Tag               string  `yaml:"tag" validate:"required"`
 	KeyPhrase         string  `yaml:"keyphrase" validate:"required"`
-	ItemsDelimiter    string  `yaml:"itemsDelimeter" validate:"required"`
-	TrimSpaces        bool    `yaml:"trimSpaces" validate:"required"`
-	RemoveTrailingDot bool    `yaml:"removeTrailingDot" validate:"required"`
+	ItemsDelimiter    string  `yaml:"itemsDelimeter"`
+	TrimSpaces        *bool   `yaml:"trimSpaces"`
+	RemoveTrailingDot *bool   `yaml:"removeTrailingDot"`
 	IsTable           bool    `yaml:"isTable"`
 	TopicsDelimiter   *string `yaml:"topicsDelimeter,omitempty"`
 }
@@ -203,16 +203,16 @@ func parseItemsFromParagraphs(pos SourcePosition, paragraphs []string) ([]Source
 			}
 
 			topic, elements := topicAndElements[0], strings.Split(topicAndElements[1], pos.ItemsDelimiter)
-			if pos.TrimSpaces {
+			if pos.TrimSpaces != nil && *pos.TrimSpaces {
 				topic = strings.TrimSpace(topic)
 			}
 
 			for _, element := range elements {
 				itemContent := element
-				if pos.TrimSpaces {
+				if pos.TrimSpaces != nil && *pos.TrimSpaces {
 					itemContent = strings.TrimSpace(itemContent)
 				}
-				if pos.RemoveTrailingDot {
+				if pos.RemoveTrailingDot != nil && *pos.RemoveTrailingDot {
 					itemContent = strings.TrimSuffix(itemContent, ".")
 				}
 				items = append(items, SourceItem{
@@ -225,10 +225,10 @@ func parseItemsFromParagraphs(pos SourcePosition, paragraphs []string) ([]Source
 			elements := strings.Split(paragraphContent, pos.ItemsDelimiter)
 			for _, element := range elements {
 				itemContent := element
-				if pos.TrimSpaces {
+				if pos.TrimSpaces != nil && *pos.TrimSpaces {
 					itemContent = strings.TrimSpace(itemContent)
 				}
-				if pos.RemoveTrailingDot {
+				if pos.RemoveTrailingDot != nil && *pos.RemoveTrailingDot {
 					itemContent = strings.TrimSuffix(itemContent, ".")
 				}
 				items = append(items, SourceItem{

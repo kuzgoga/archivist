@@ -3,18 +3,12 @@ sources:
     - filename: "assets/10_memo_history.docx"
       tag: "Всеобщая история. 10 класс. Персоналии"
       keyphrase: "Вильгельм II"
-      itemsDelimeter: ","
       topicsDelimeter: " - "
-      trimSpaces: true
-      removeTrailingDot: true
       isTable: true
 
     - filename: "assets/10_memo.docx"
       tag: "Обществознание. 10 класс. Персоналии"
       keyphrase: "Аврелий Августин Иппонийский"
-      itemsDelimeter: ","
-      trimSpaces: true
-      removeTrailingDot: true
 
   terms:
     - filename: "assets/10_memo_history.docx"
@@ -29,27 +23,18 @@ sources:
     - filename: "assets/10_memo.docx"
       tag: "Обществознание. 10 класс. Термины"
       keyphrase: "агностицизм"
-      itemsDelimeter: ","
-      trimSpaces: true
-      removeTrailingDot: true
 
   dates:
     - filename: "assets/10_memo_history.docx"
       tag: "Всеобщая история. 10 класс. Хронология"
       keyphrase: "28 июня 1914"
-      itemsDelimeter: ","
       topicsDelimeter: " - "
-      trimSpaces: true
-      removeTrailingDot: true
       isTable: true
 
     - filename: "assets/8_memo_history.docx"
       tag: "Всеобщая история. 8 класс. Хронология"
       keyphrase: " 7 октября 1763 г."
-      itemsDelimeter: ","
       topicsDelimeter: ". "
-      trimSpaces: true
-      removeTrailingDot: true
       isTable: true
 
 # Конфигурация AI провайдера (выберите один)
@@ -69,3 +54,8 @@ ai:
   #   model: "gpt-4o-mini"
   #   apiKey: "your-api-key"
   #   baseUrl: "https://api.openai.com/v1"  # optional
+
+exporter:
+  personsParts: 1
+  termsParts: 1
+  datesParts: 1
