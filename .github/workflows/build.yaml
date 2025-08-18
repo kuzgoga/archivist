@@ -30,16 +30,6 @@ jobs:
         with:
           go-version: stable
 
-      - name: Cache Go modules
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.cache/go-build
-            ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-
-
       - name: Download dependencies
         run: go mod download
 
@@ -106,7 +96,7 @@ jobs:
             VERSION="dev-$(git rev-parse --short HEAD)"
           fi
 
-          BUILD_FLAGS="-ldflags=-s -w -X main.version=${VERSION} -X main.buildTime=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          BUILD_FLAGS="-ldflags=-s -X main.version=${VERSION} -X main.buildTime=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 
           go build $BUILD_FLAGS -o "$BINARY_NAME" ./cmd/archivist/
 
