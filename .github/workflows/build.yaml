@@ -135,7 +135,6 @@ jobs:
               artifact_name=$(basename "$artifact_dir")
               echo "Processing artifact: $artifact_name"
 
-              # Находим бинарный файл в директории артефакта
               binary_file=$(find "$artifact_dir" -type f -executable -o -name "*.exe" | head -1)
               if [ -z "$binary_file" ]; then
                 binary_file=$(find "$artifact_dir" -type f | head -1)
@@ -145,7 +144,9 @@ jobs:
                 binary_name=$(basename "$binary_file")
                 echo "Found binary: $binary_name"
 
-                final_name="${version_standalone}-${binary_name}"
+                platform_suffix="${binary_name#${{ env.PROJECT_NAME }}-}"
+
+                final_name="${{ env.PROJECT_NAME }}-${version_standalone}-${platform_suffix}"
                 cp "$binary_file" "deployment/$final_name"
                 echo "Copied to: $final_name"
               fi
@@ -161,12 +162,12 @@ jobs:
 
           | Platform | Architecture | Download |
           |----------|--------------|----------|
-          | Linux | x86_64 | [archivist-${{ github.event.inputs.tag }}-linux-amd64](https://github.com/${{ github.repository }}/releases/download/${{ github.event.inputs.tag }}/${{ github.event.inputs.tag }}-archivist-linux-amd64) |
-          | Linux | ARM64 | [archivist-${{ github.event.inputs.tag }}-linux-arm64](https://github.com/${{ github.repository }}/releases/download/${{ github.event.inputs.tag }}/${{ github.event.inputs.tag }}-archivist-linux-arm64) |
-          | Linux | ARMv7 | [archivist-${{ github.event.inputs.tag }}-linux-armv7](https://github.com/${{ github.repository }}/releases/download/${{ github.event.inputs.tag }}/${{ github.event.inputs.tag }}-archivist-linux-armv7) |
-          | Windows | x86_64 | [archivist-${{ github.event.inputs.tag }}-windows-amd64.exe](https://github.com/${{ github.repository }}/releases/download/${{ github.event.inputs.tag }}/${{ github.event.inputs.tag }}-archivist-windows-amd64.exe) |
-          | macOS | Intel | [archivist-${{ github.event.inputs.tag }}-darwin-amd64](https://github.com/${{ github.repository }}/releases/download/${{ github.event.inputs.tag }}/${{ github.event.inputs.tag }}-archivist-darwin-amd64) |
-          | macOS | Apple Silicon | [archivist-${{ github.event.inputs.tag }}-darwin-arm64](https://github.com/${{ github.repository }}/releases/download/${{ github.event.inputs.tag }}/${{ github.event.inputs.tag }}-archivist-darwin-arm64) |
+          | Linux | x86_64 | [archivist-${{ github.event.inputs.tag }}-linux-amd64](https://github.com/${{ github.repository }}/releases/download/${{ github.event.inputs.tag }}/archivist-${{ github.event.inputs.tag }}-linux-amd64) |
+          | Linux | ARM64 | [archivist-${{ github.event.inputs.tag }}-linux-arm64](https://github.com/${{ github.repository }}/releases/download/${{ github.event.inputs.tag }}/archivist-${{ github.event.inputs.tag }}-linux-arm64) |
+          | Linux | ARMv7 | [archivist-${{ github.event.inputs.tag }}-linux-armv7](https://github.com/${{ github.repository }}/releases/download/${{ github.event.inputs.tag }}/archivist-${{ github.event.inputs.tag }}-linux-armv7) |
+          | Windows | x86_64 | [archivist-${{ github.event.inputs.tag }}-windows-amd64.exe](https://github.com/${{ github.repository }}/releases/download/${{ github.event.inputs.tag }}/archivist-${{ github.event.inputs.tag }}-windows-amd64.exe) |
+          | macOS | Intel | [archivist-${{ github.event.inputs.tag }}-darwin-amd64](https://github.com/${{ github.repository }}/releases/download/${{ github.event.inputs.tag }}/archivist-${{ github.event.inputs.tag }}-darwin-amd64) |
+          | macOS | Apple Silicon | [archivist-${{ github.event.inputs.tag }}-darwin-arm64](https://github.com/${{ github.repository }}/releases/download/${{ github.event.inputs.tag }}/archivist-${{ github.event.inputs.tag }}-darwin-arm64) |
 
           ### 🔐 Verification
 
