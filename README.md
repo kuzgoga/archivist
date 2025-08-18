@@ -11,6 +11,14 @@ An automated tool for writing terms, dates, and chronologies
 - Flexible and customizable Typst templating language
 - Full automation: no manual actions required after configuration
 
+### Demo Files
+
+See examples of the tool's output:
+
+- [World History. Grade 8. Chronology](media/demo/Всеобщая%20история.%208%20класс.%20Хронология.pdf)
+- [Russian History. Grade 10. Personalities](media/demo/История%20России.%2010%20класс.%20Персоналии.pdf)
+- [Russian History. Grade 10. Terms](media/demo/История%20России.%2010%20класс.%20Термины.pdf)
+
 ### Installation
 
 1. [**Install Typst**](https://github.com/typst/typst#installation)
@@ -79,6 +87,14 @@ When reporting an issue, please include:
 - поддержка различных LLM: OpenAI (и совместимых Gemini, Grok), Gigachat, Github Copilot (не требует авторизации)
 - гибкий и настраиваемый язык шаблонов Typst
 - полная автоматизация: не требует ручных действий после настройки
+
+### Демонстрационные файлы
+
+Примеры результата работы утилиты:
+
+- [Всеобщая история. 8 класс. Хронология](media/demo/Всеобщая%20история.%208%20класс.%20Хронология.pdf)
+- [История России. 10 класс. Персоналии](media/demo/История%20России.%2010%20класс.%20Персоналии.pdf)
+- [История России. 10 класс. Термины](media/demo/История%20России.%2010%20класс.%20Термины.pdf)
 
 ### Установка
 
