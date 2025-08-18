@@ -15,7 +15,6 @@ type GigaChat struct {
 }
 
 func NewGigaChat(clientId string, clientSecret string, model string) (*GigaChat, error) {
-	patchDefaultClient()
 	client, err := gigachat.NewInsecureClient(clientId, clientSecret)
 	if err != nil {
 		return nil, err
