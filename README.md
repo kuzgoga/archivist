@@ -17,16 +17,7 @@ An automated tool for writing terms, dates, and chronologies
 
 2. **Download Archivist**
 
-   Download the appropriate binary for your platform and make it executable:
-
-   | Platform | Architecture | Download                                                                                                                 |
-   | -------- | ------------ | ------------------------------------------------------------------------------------------------------------------------ |
-   | Linux    | x86_64       | [archivist-linux-amd64](https://github.com/kuzgoga/archivist/releases/latest/download/archivist-linux-amd64)             |
-   | Linux    | ARM64        | [archivist-linux-arm64](https://github.com/kuzgoga/archivist/releases/latest/download/archivist-linux-arm64)             |
-   | macOS    | x86_64       | [archivist-darwin-amd64](https://github.com/kuzgoga/archivist/releases/latest/download/archivist-darwin-amd64)           |
-   | macOS    | ARM64        | [archivist-darwin-arm64](https://github.com/kuzgoga/archivist/releases/latest/download/archivist-darwin-arm64)           |
-   | Windows  | x86_64       | [archivist-windows-amd64.exe](https://github.com/kuzgoga/archivist/releases/latest/download/archivist-windows-amd64.exe) |
-
+   Download the appropriate binary for your platform from [here](https://github.com/kuzgoga/archivist/releases) and make it executable.
    Make the binary executable (Unix-like systems):
 
    ```bash
@@ -95,15 +86,7 @@ When reporting an issue, please include:
 
 2. **Скачайте Archivist**
 
-   Скачайте подходящий бинарный файл для вашей платформы и сделайте его исполняемым:
-
-   | Платформа | Архитектура | Скачать                                                                                                                  |
-   | --------- | ----------- | ------------------------------------------------------------------------------------------------------------------------ |
-   | Linux     | x86_64      | [archivist-linux-amd64](https://github.com/kuzgoga/archivist/releases/latest/download/archivist-linux-amd64)             |
-   | Linux     | ARM64       | [archivist-linux-arm64](https://github.com/kuzgoga/archivist/releases/latest/download/archivist-linux-arm64)             |
-   | macOS     | x86_64      | [archivist-darwin-amd64](https://github.com/kuzgoga/archivist/releases/latest/download/archivist-darwin-amd64)           |
-   | macOS     | ARM64       | [archivist-darwin-arm64](https://github.com/kuzgoga/archivist/releases/latest/download/archivist-darwin-arm64)           |
-   | Windows   | x86_64      | [archivist-windows-amd64.exe](https://github.com/kuzgoga/archivist/releases/latest/download/archivist-windows-amd64.exe) |
+   Скачайте подходящий бинарный файл для вашей платформы [отсюда](https://github.com/kuzgoga/archivist/releases) и сделайте его исполняемым.
 
    Сделайте бинарный файл исполняемым (Unix-подобные системы):
 
