@@ -2,8 +2,9 @@ package ai
 
 import (
 	"errors"
-	"github.com/dgraph-io/badger/v4"
 	"log"
+
+	"github.com/dgraph-io/badger/v4"
 )
 
 type ChatProviderWithCache struct {
