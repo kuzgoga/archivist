@@ -12,12 +12,9 @@ require (
 	github.com/paulrzcz/go-gigachat v0.1.2
 	github.com/schollz/progressbar/v3 v3.18.0
 	github.com/stong1994/github-copilot-api v0.0.0-20241128162310-fa83a9d9fc9b
-	github.com/trietmn/go-wiki v1.0.4
-	golang.org/x/text v0.26.0
 )
 
 require (
-	github.com/anaskhan96/soup v1.2.5 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/dgraph-io/ristretto/v2 v2.2.0 // indirect
 	github.com/dustin/go-humanize v1.0.1 // indirect
@@ -46,5 +43,6 @@ require (
 	golang.org/x/oauth2 v0.30.0 // indirect
 	golang.org/x/sys v0.33.0 // indirect
 	golang.org/x/term v0.32.0 // indirect
+	golang.org/x/text v0.26.0 // indirect
 	google.golang.org/protobuf v1.36.6 // indirect
 )
