@@ -27,7 +27,7 @@ func LoadConfig(filename string) *Config {
 	if err != nil {
 		log.Fatalf("failed to open config file: %v\n", err)
 	}
-	defer file.Close()
+	defer func() { _ = file.Close() }()
 
 	var config Config
 	dec := yaml.NewDecoder(
@@ -142,15 +142,15 @@ func BuildApplication(configFile string) *Application {
 
 func (app *Application) Close() {
 	if closer, ok := app.AiProvider.(io.Closer); ok {
-		closer.Close()
+		_ = closer.Close()
 	}
 
 	if closer, ok := app.DataSource.(io.Closer); ok {
-		closer.Close()
+		_ = closer.Close()
 	}
 
 	if closer, ok := app.Exporter.(io.Closer); ok {
-		closer.Close()
+		_ = closer.Close()
 	}
 }
 
