@@ -1,7 +1,14 @@
-.env
+# user content
 wikicache
 llmcache*
 *.pdf
 *.typ
 output
+
+# user config
 archivist.yaml
+.env
+
+# user build
+archivist
+archivist.exe
