@@ -4,3 +4,4 @@ llmcache*
 *.pdf
 *.typ
 output
+archivist.yaml
