@@ -19,3 +19,7 @@ build: vet
 run: vet
 	go run ./cmd/archivist/
 .PHONY:run
+
+test: vet lint
+	go test -v ./...
+.PHONY:test
