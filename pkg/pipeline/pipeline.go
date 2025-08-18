@@ -35,7 +35,7 @@ func ProcessDatasourceItems(datasource datasource.Datasource, llm ai.ChatProvide
 }
 
 func processItemsList(source []datasource.SourceItem, llm ai.ChatProvider, prompt string, name string) []CompleteItem {
-	var result []CompleteItem
+	result := make([]CompleteItem, 0, len(source))
 	bar := progressbar.NewOptions(
 		len(source),
 		progressbar.OptionSetDescription(fmt.Sprintf("Writing %s...", name)),

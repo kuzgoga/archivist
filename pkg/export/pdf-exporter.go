@@ -141,7 +141,7 @@ func RenderPdfWithTypstParceled(group TagGroup, parcelIndex, totalParcels int, d
 	filenamePdf := strings.TrimSuffix(filename, ".typ") + ".pdf"
 
 	f, err := os.Create(filename)
-	defer func() { f.Close() }()
+	defer func() { _ = f.Close() }()
 	if err != nil {
 		return err
 	}
@@ -169,7 +169,7 @@ func RenderPdfWithTypstParceled(group TagGroup, parcelIndex, totalParcels int, d
 	log.Printf("Created file %s", filenamePdf)
 
 	if deleteTypstFile {
-		os.Remove(filename)
+		_ = os.Remove(filename)
 	}
 
 	return nil

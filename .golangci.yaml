@@ -1,0 +1,17 @@
+version: "2"
+
+linters:
+  default: standard
+  enable:
+    - errcheck
+    - gosimple
+    - govet
+    - ineffassign
+    - staticcheck
+    - unused
+    - prealloc
+
+formatters:
+  enable:
+    - gofumpt
+    - goimports

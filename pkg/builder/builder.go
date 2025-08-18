@@ -90,7 +90,11 @@ func CreateAiProvider(config *Config) ai.ChatProvider {
 }
 
 func CreateDataSource(config *Config) datasource.Datasource {
-	var sources []datasource.Option
+	sources := make(
+		[]datasource.Option,
+		0,
+		len(config.Sources.Dates)+len(config.Sources.Terms)+len(config.Sources.Persons),
+	)
 	sourcesCount := 0
 
 	for _, source := range config.Sources.Persons {

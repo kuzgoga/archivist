@@ -16,7 +16,7 @@ type Client struct {
 }
 
 func NewClient(apiKey string, model shared.ChatModel, baseUrl *string) *Client {
-	var options []option.RequestOption = []option.RequestOption{option.WithAPIKey(apiKey)}
+	var options = []option.RequestOption{option.WithAPIKey(apiKey)}
 	if baseUrl != nil {
 		options = append(options, option.WithBaseURL(*baseUrl))
 	}
