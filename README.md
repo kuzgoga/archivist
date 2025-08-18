@@ -1,8 +1,15 @@
 # Archivist
 
-[English](#english) | [Русский](#русский)
+## 🇺🇸 English | [🇷🇺 Russian](#русский)
 
-## English
+An automated tool for writing terms, dates, and chronologies
+
+**Features:**
+
+- Simple and flexible YAML configuration without code changes
+- Support for multiple LLMs: OpenAI (and compatible ones like Gemini, Grok), Gigachat, Github Copilot (no authorization required)
+- Flexible and customizable Typst templating language
+- Full automation: no manual actions required after configuration
 
 ### Installation
 
@@ -25,6 +32,8 @@
    ```bash
    chmod +x archivist-*
    ```
+
+   We recommend to rename it to `archivist`.
 
 3. **Create Assets Folder**
 
@@ -71,6 +80,15 @@ When reporting an issue, please include:
 
 ## Русский
 
+Инструмент для автоматического написания хронологий, терминов, персоналий.
+
+**Возможности:**
+
+- простая и гибкая YAML-конфигурация без изменения кода
+- поддержка различных LLM: OpenAI (и совместимых Gemini, Grok), Gigachat, Github Copilot (не требует авторизации)
+- гибкий и настраиваемый язык шаблонов Typst
+- полная автоматизация: не требует ручных действий после настройки
+
 ### Установка
 
 1. [**Установите Typst**](https://github.com/typst/typst#installation)
@@ -92,6 +110,8 @@ When reporting an issue, please include:
    ```bash
    chmod +x archivist-*
    ```
+
+   Рекомендуем переименовать его в `archivist`.
 
 3. **Создайте папку Assets**
 
@@ -138,5 +158,5 @@ make build
 
 ### Contacts / Контакты
 
-- Telegram: https://t.me/kuzgoga
-- Email: me@gogacoder.ru
+- [Telegram](https://t.me/kuzgoga)
+- [Email](mailto:me@gogacoder.ru)
