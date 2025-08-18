@@ -1,0 +1,251 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: ["*"]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release Tag and version (e.g., v1.0.0)"
+        required: true
+      publish:
+        description: "r for normal release, p for prerelease, leave empty to not publish anything"
+        required: false
+
+env:
+  PROJECT_NAME: archivist
+
+jobs:
+  lint-and-test:
+    name: Lint and Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: stable
+
+      - name: Cache Go modules
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+
+      - name: Download dependencies
+        run: go mod download
+
+      - name: Golangci
+        uses: golangci/golangci-lint-action@v8
+        with:
+          version: latest
+
+      - name: Run tests
+        run: make test
+
+  build-matrix:
+    name: Build Matrix
+    runs-on: ubuntu-latest
+    needs: lint-and-test
+    strategy:
+      matrix:
+        include:
+          - goos: linux
+            goarch: amd64
+            suffix: linux-amd64
+          - goos: linux
+            goarch: arm64
+            suffix: linux-arm64
+          - goos: linux
+            goarch: arm
+            goarm: 7
+            suffix: linux-armv7
+          - goos: windows
+            goarch: amd64
+            suffix: windows-amd64
+            extension: .exe
+          - goos: darwin
+            goarch: amd64
+            suffix: darwin-amd64
+          - goos: darwin
+            goarch: arm64
+            suffix: darwin-arm64
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: stable
+
+      - name: Download dependencies
+        run: go mod download
+
+      - name: Build binary
+        env:
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.goarch }}
+          GOARM: ${{ matrix.goarm }}
+        run: |
+          BINARY_NAME="${{ env.PROJECT_NAME }}${{ matrix.extension }}"
+          echo "Building $BINARY_NAME for ${{ matrix.suffix }}"
+
+          if [ -n "${{ github.event.inputs.tag }}" ]; then
+            VERSION="${{ github.event.inputs.tag }}"
+          else
+            VERSION="dev-$(git rev-parse --short HEAD)"
+          fi
+
+          BUILD_FLAGS="-ldflags=-s -w -X main.version=${VERSION} -X main.buildTime=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
+          go build $BUILD_FLAGS -o "$BINARY_NAME" ./cmd/archivist/
+
+          mkdir -p artifacts/${{ matrix.suffix }}
+          mv "$BINARY_NAME" artifacts/${{ matrix.suffix }}/
+
+          cd artifacts/${{ matrix.suffix }}
+          if command -v sha256sum >/dev/null; then
+            sha256sum "$BINARY_NAME" > "$BINARY_NAME.sha256"
+          else
+            shasum -a 256 "$BINARY_NAME" > "$BINARY_NAME.sha256"
+          fi
+
+          tar czf "../${{ matrix.suffix }}.tar.gz" .
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-${{ matrix.suffix }}
+          path: artifacts/${{ matrix.suffix }}.tar.gz
+          retention-days: 7
+
+  publish:
+    name: Pack & Publish Release
+    runs-on: ubuntu-latest
+    needs: build-matrix
+    if: github.event.inputs.tag != ''
+    permissions:
+      contents: write
+      actions: read
+    env:
+      INPUT_VERSION: ${{ github.event.inputs.tag }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: download-artifacts
+
+      - name: Install ghr tool
+        run: |
+          curl -Lo - https://github.com/tcnksm/ghr/releases/download/v0.17.0/ghr_v0.17.0_linux_amd64.tar.gz | tar xzv
+          mv ghr*linux_amd64/ghr .
+          chmod +x ghr
+
+      - name: Pack release artifacts
+        run: |
+          version_standalone="${{ github.event.inputs.tag }}"
+          mkdir -p deployment
+
+          find download-artifacts -name "*.tar.gz" | xargs -I {} tar xzf {} -C deployment
+
+          cd deployment
+
+          if [ -d "linux-amd64" ]; then
+            mv linux-amd64 ${{ env.PROJECT_NAME }}
+            tar czf "${version_standalone}-linux-amd64.tar.gz" ${{ env.PROJECT_NAME }}
+            rm -rf ${{ env.PROJECT_NAME }}
+          fi
+
+          if [ -d "linux-arm64" ]; then
+            mv linux-arm64 ${{ env.PROJECT_NAME }}
+            tar czf "${version_standalone}-linux-arm64.tar.gz" ${{ env.PROJECT_NAME }}
+            rm -rf ${{ env.PROJECT_NAME }}
+          fi
+
+          if [ -d "linux-armv7" ]; then
+            mv linux-armv7 ${{ env.PROJECT_NAME }}
+            tar czf "${version_standalone}-linux-armv7.tar.gz" ${{ env.PROJECT_NAME }}
+            rm -rf ${{ env.PROJECT_NAME }}
+          fi
+
+          if [ -d "windows-amd64" ]; then
+            mv windows-amd64 ${{ env.PROJECT_NAME }}
+            zip -9 -r "${version_standalone}-windows-amd64.zip" ${{ env.PROJECT_NAME }}
+            rm -rf ${{ env.PROJECT_NAME }}
+          fi
+
+          # macOS Intel
+          if [ -d "darwin-amd64" ]; then
+            mv darwin-amd64 ${{ env.PROJECT_NAME }}
+            tar czf "${version_standalone}-darwin-amd64.tar.gz" ${{ env.PROJECT_NAME }}
+            rm -rf ${{ env.PROJECT_NAME }}
+          fi
+
+          # Apple Silicon
+          if [ -d "darwin-arm64" ]; then
+            mv darwin-arm64 ${{ env.PROJECT_NAME }}
+            tar czf "${version_standalone}-darwin-arm64.tar.gz" ${{ env.PROJECT_NAME }}
+            rm -rf ${{ env.PROJECT_NAME }}
+          fi
+
+      - name: Generate release notes
+        run: |
+          cat > release_notes.md << 'EOF'
+          ## 🚀 Release ${{ github.event.inputs.tag }}
+
+          ### 📦 Downloads
+
+          | Platform | Architecture | Download |
+          |----------|--------------|----------|
+          | Linux | x86_64 | [archivist-${{ github.event.inputs.tag }}-linux-amd64.tar.gz](https://github.com/${{ github.repository }}/releases/download/${{ github.event.inputs.tag }}/archivist-${{ github.event.inputs.tag }}-linux-amd64.tar.gz) |
+          | Linux | ARM64 | [archivist-${{ github.event.inputs.tag }}-linux-arm64.tar.gz](https://github.com/${{ github.repository }}/releases/download/${{ github.event.inputs.tag }}/archivist-${{ github.event.inputs.tag }}-linux-arm64.tar.gz) |
+          | Linux | ARMv7 | [archivist-${{ github.event.inputs.tag }}-linux-armv7.tar.gz](https://github.com/${{ github.repository }}/releases/download/${{ github.event.inputs.tag }}/archivist-${{ github.event.inputs.tag }}-linux-armv7.tar.gz) |
+          | Windows | x86_64 | [archivist-${{ github.event.inputs.tag }}-windows-amd64.zip](https://github.com/${{ github.repository }}/releases/download/${{ github.event.inputs.tag }}/archivist-${{ github.event.inputs.tag }}-windows-amd64.zip) |
+          | macOS | Intel | [archivist-${{ github.event.inputs.tag }}-darwin-amd64.tar.gz](https://github.com/${{ github.repository }}/releases/download/${{ github.event.inputs.tag }}/archivist-${{ github.event.inputs.tag }}-darwin-amd64.tar.gz) |
+          | macOS | Apple Silicon | [archivist-${{ github.event.inputs.tag }}-darwin-arm64.tar.gz](https://github.com/${{ github.repository }}/releases/download/${{ github.event.inputs.tag }}/archivist-${{ github.event.inputs.tag }}-darwin-arm64.tar.gz) |
+
+          ### 🔐 Verification
+
+          All binaries include SHA256 checksums for verification.
+
+          ### 📋 What's Changed
+
+          EOF
+
+          PREVIOUS_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+          if [ -n "$PREVIOUS_TAG" ]; then
+            echo "**Full Changelog**: https://github.com/${{ github.repository }}/compare/${PREVIOUS_TAG}...${{ github.event.inputs.tag }}" >> release_notes.md
+          else
+            echo "**This is the first release!** 🎉" >> release_notes.md
+          fi
+
+      - name: Upload deployment artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: Deployment-${{ github.sha }}
+          path: deployment
+
+      - name: PreRelease
+        if: github.event.inputs.publish == 'p'
+        run: |
+          ./ghr -prerelease -delete -t "${{ github.token }}" -n "${{ github.event.inputs.tag }}" -b "$(cat release_notes.md)" "${{ github.event.inputs.tag }}" deployment
+
+      - name: Release
+        if: github.event.inputs.publish == 'r'
+        run: |
+          ./ghr -delete -t "${{ github.token }}" -n "${{ github.event.inputs.tag }}" -b "$(cat release_notes.md)" "${{ github.event.inputs.tag }}" deployment
