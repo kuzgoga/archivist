@@ -1,0 +1,101 @@
+sources:
+  # Configuration for extracting person information
+  persons:
+    - tag: "Всеобщая история. 10 класс. Персоналии"
+      filename: "assets/10_memo_history.docx" # Required: Path to the source document
+      keyphrase: "Вильгельм II" # Required: Key phrase to search for in the document
+      topicsDelimeter: " - " # Optional: Delimiter for separating topics within items
+      isTable: true # Whether the content is in a table format
+      itemsDelimeter: "," # Default: "," - Delimiter between items in the extracted content
+      trimSpaces: true # Default: true - Remove leading/trailing spaces from extracted definition
+      removeTrailingDot: true # Default: true - Remove trailing dots from extracted text
+
+    - tag: "История России. 10 класс. Персоналии"
+      filename: "assets/10_memo_history.docx"
+      keyphrase: "Михаил Васильевич Алексеев"
+      topicsDelimeter: " - "
+      isTable: true
+      itemsDelimeter: "," # Default: ","
+      trimSpaces: true # Default: true
+      removeTrailingDot: true # Default: true
+
+    - tag: "Обществознание. 10 класс. Персоналии"
+      filename: "assets/10_memo.docx"
+      keyphrase: "Аврелий Августин Иппонийский"
+      itemsDelimeter: "," # Default: ","
+      trimSpaces: true # Default: true
+      removeTrailingDot: true # Default: true
+      isTable: false # Default: false
+
+  # Configuration for extracting terminology
+  terms:
+    - tag: "Всеобщая история. 10 класс. Термины"
+      filename: "assets/10_memo_history.docx"
+      keyphrase: "I Балканская война"
+      topicsDelimeter: " - "
+      isTable: true
+      itemsDelimeter: "," # Default: ","
+      trimSpaces: true # Default: true
+      removeTrailingDot: true # Default: true
+
+    - tag: "История России. 10 класс. Термины"
+      filename: "assets/10_memo_history.docx"
+      keyphrase: "II Всероссийский Съезд Советов"
+      topicsDelimeter: " - "
+      isTable: true
+      itemsDelimeter: "," # Default: ","
+      trimSpaces: true # Default: true
+      removeTrailingDot: true # Default: true
+
+    - tag: "Обществознание. 10 класс. Термины"
+      filename: "assets/10_memo.docx"
+      keyphrase: "агностицизм"
+      itemsDelimeter: "," # Default: ","
+      trimSpaces: true # Default: true
+      removeTrailingDot: true # Default: true
+      isTable: false # Default: false
+
+  # Configuration for extracting dates and chronology
+  dates:
+    - tag: "Всеобщая история. 10 класс. Хронология"
+      filename: "assets/10_memo_history.docx"
+      keyphrase: "28 июня 1914"
+      topicsDelimeter: " - "
+      isTable: true
+      itemsDelimeter: "," # Default: ","
+      trimSpaces: true # Default: true
+      removeTrailingDot: true # Default: true
+
+    - tag: "Всеобщая история. 8 класс. Хронология"
+      filename: "assets/8_memo_history.docx"
+      keyphrase: " 7 октября 1763 г."
+      topicsDelimeter: ". "
+      isTable: true
+      itemsDelimeter: "," # Default: ","
+      trimSpaces: true # Default: true
+      removeTrailingDot: true # Default: true
+
+# AI Provider configuration (choose exactly one provider)
+ai:
+  # GitHub Copilot configuration
+  copilot:
+    model: "gpt-4" # Required: Model to use (e.g., "gpt-4", "gpt-3.5-turbo")
+
+  # GigaChat configuration (Russian AI service)
+  # gigachat:
+  #   clientId: "your-client-id"                        # Required: Your GigaChat client ID
+  #   clientSecret: "your-client-secret"                # Required: Your GigaChat client secret
+  #   model: "GigaChat-Max"                             # Required: Model name (e.g., "GigaChat", "GigaChat-Max")
+
+  # OpenAI configuration
+  # openai:
+  #   model: "gpt-4o-mini"                              # Required: OpenAI model (e.g., "gpt-4", "gpt-3.5-turbo", "gpt-4o-mini")
+  #   apiKey: "your-api-key"                            # Required: Your OpenAI API key
+  #   baseUrl: "https://api.openai.com/v1"              # Optional: Custom API base URL (useful for proxies or alternative endpoints)
+
+# Export configuration - controls how the processed data is exported
+exporter:
+  personsParts: 1 # Default: not set - Number of parts to split persons data into (for large datasets)
+  termsParts: 1 # Default: not set - Number of parts to split terms data into
+  datesParts: 1 # Default: not set - Number of parts to split dates data into
+  deleteTypstFiles: true # Default: true - Whether to delete intermediate Typst files after processing

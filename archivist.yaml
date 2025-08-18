@@ -40,20 +40,20 @@ sources:
 # Конфигурация AI провайдера (выберите один)
 ai:
   # Для GitHub Copilot
-  copilot:
-    model: "gpt-4"
+  #copilot:
+  #  model: "gpt-4"
 
   # Для GigaChat
-  # gigachat:
-  #   clientId: "your-client-id"
-  #   clientSecret: "your-client-secret"
-  #   model: "GigaChat"
+  #gigachat:
+  #  clientId: "my-client-id"
+  #  clientSecret: "my-client-secret"
+  #  model: "GigaChat-2-Max"
 
   # Для OpenAI
-  # openai:
-  #   model: "gpt-4o-mini"
-  #   apiKey: "your-api-key"
-  #   baseUrl: "https://api.openai.com/v1"  # optional
+  openai:
+    model: "gpt-5-mini"
+    apiKey: "my-api-key"
+    baseUrl: "https://api.openai.com/v1" # optional
 
 exporter:
   personsParts: 1
