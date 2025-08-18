@@ -1,0 +1,64 @@
+sources:
+  persons:
+    - tag: "Всеобщая история. 10 класс. Персоналии"
+      filename: "assets/10_memo_history.docx"
+      keyphrase: "Вильгельм II"
+      topicsDelimeter: " - "
+      isTable: true
+
+    - tag: "История России. 10 класс. Персоналии"
+      filename: "assets/10_memo_history.docx"
+      keyphrase: "Михаил Васильевич Алексеев"
+      topicsDelimeter: " - "
+      isTable: true
+
+    - tag: "Обществознание. 10 класс. Персоналии"
+      filename: "assets/10_memo.docx"
+      keyphrase: "Аврелий Августин Иппонийский"
+
+  terms:
+    - tag: "Всеобщая история. 10 класс. Термины"
+      filename: "assets/10_memo_history.docx"
+      keyphrase: "I Балканская война"
+      topicsDelimeter: " - "
+      isTable: true
+
+    - tag: "История России. 10 класс. Термины"
+      filename: "assets/10_memo_history.docx"
+      keyphrase: "II Всероссийский Съезд Советов"
+      topicsDelimeter: " - "
+      isTable: true
+
+    - tag: "Обществознание. 10 класс. Термины"
+      filename: "assets/10_memo.docx"
+      keyphrase: "агностицизм"
+
+  dates:
+    - tag: "Всеобщая история. 10 класс. Хронология"
+      filename: "assets/10_memo_history.docx"
+      keyphrase: "28 июня 1914"
+      topicsDelimeter: " - "
+      isTable: true
+
+    - tag: "Всеобщая история. 8 класс. Хронология"
+      filename: "assets/8_memo_history.docx"
+      keyphrase: " 7 октября 1763 г."
+      topicsDelimeter: ". "
+      isTable: true
+
+# Ai provider (choose one)
+ai:
+  # GitHub Copilot
+  copilot:
+    model: "gpt-4"
+
+  # GigaChat
+  # gigachat:
+  #   clientId: "your-client-id"
+  #   clientSecret: "your-client-secret"
+  #   model: "GigaChat"
+
+  # OpenAI
+  # openai:
+  #   model: "gpt-4o-mini"
+  #   apiKey: "your-api-key"
