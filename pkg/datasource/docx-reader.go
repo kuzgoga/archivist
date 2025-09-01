@@ -193,34 +193,63 @@ func readSourceFromDocx(doc *docx.Docx, pos SourcePosition) ([]SourceItem, error
 
 func parseItemsFromParagraphs(pos SourcePosition, paragraphs []string) ([]SourceItem, error) {
 	var items []SourceItem
+	var lastTopic *string
+
 	for _, p := range paragraphs {
 		paragraphContent := p
 
 		if pos.TopicsDelimiter != nil {
 			topicAndElements := strings.SplitN(paragraphContent, *pos.TopicsDelimiter, 2)
+
+			if len(topicAndElements) == 2 {
+				topic, elements := topicAndElements[0], strings.Split(topicAndElements[1], pos.ItemsDelimiter)
+				if pos.TrimSpaces != nil && *pos.TrimSpaces {
+					topic = strings.TrimSpace(topic)
+				}
+
+				lastTopic = &topic
+
+				for _, element := range elements {
+					itemContent := element
+					if pos.TrimSpaces != nil && *pos.TrimSpaces {
+						itemContent = strings.TrimSpace(itemContent)
+					}
+					if pos.RemoveTrailingDot != nil && *pos.RemoveTrailingDot {
+						itemContent = strings.TrimSuffix(itemContent, ".")
+					}
+					items = append(items, SourceItem{
+						Tag:   pos.Tag,
+						Name:  itemContent,
+						Topic: &topic,
+					})
+				}
+			} else {
+				if lastTopic != nil {
+					log.Printf("Topic delimiter %q not found in paragraph, attaching to last topic: %q", *pos.TopicsDelimiter, *lastTopic)
+				} else {
+					log.Printf("Topic delimiter %q not found in paragraph and no previous topic, processing as simple list", *pos.TopicsDelimiter)
+				}
+
+				for element := range strings.SplitSeq(paragraphContent, pos.ItemsDelimiter) {
+					itemContent := element
+					if pos.TrimSpaces != nil && *pos.TrimSpaces {
+						itemContent = strings.TrimSpace(itemContent)
+					}
+					if pos.RemoveTrailingDot != nil && *pos.RemoveTrailingDot {
+						itemContent = strings.TrimSuffix(itemContent, ".")
+					}
+					items = append(items, SourceItem{
+						Tag:   pos.Tag,
+						Name:  itemContent,
+						Topic: lastTopic,
+					})
+				}
+			}
+
 			if len(topicAndElements) != 2 {
 				return nil, errors.New(errInvalidTopicDelimiter)
 			}
 
-			topic, elements := topicAndElements[0], strings.Split(topicAndElements[1], pos.ItemsDelimiter)
-			if pos.TrimSpaces != nil && *pos.TrimSpaces {
-				topic = strings.TrimSpace(topic)
-			}
-
-			for _, element := range elements {
-				itemContent := element
-				if pos.TrimSpaces != nil && *pos.TrimSpaces {
-					itemContent = strings.TrimSpace(itemContent)
-				}
-				if pos.RemoveTrailingDot != nil && *pos.RemoveTrailingDot {
-					itemContent = strings.TrimSuffix(itemContent, ".")
-				}
-				items = append(items, SourceItem{
-					Tag:   pos.Tag,
-					Name:  itemContent,
-					Topic: &topic,
-				})
-			}
 		} else {
 			elements := strings.Split(paragraphContent, pos.ItemsDelimiter)
 			for _, element := range elements {
