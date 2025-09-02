@@ -1,0 +1,50 @@
+sources:
+  persons:
+    - filename: "assets/11_memo_history.docx"
+      tag: "Всеобщая история. 11 класс. Персоналии"
+      keyphrase: "Билл Клинтон"
+      topicsDelimeter: " - "
+      isTable: true
+
+    - filename: "assets/11_memo_history.docx"
+      tag: "История России. 11 класс. Персоналии"
+      keyphrase: "Леонид Иванович Абалкин"
+      isTable: true
+
+  terms:
+    - filename: "assets/11_memo_history.docx"
+      tag: "Всеобщая история. 11 класс. Термины"
+      keyphrase: "НАТО"
+      topicsDelimeter: " - "
+      trimSpaces: true
+      removeTrailingDot: true
+      isTable: true
+
+    - filename: "assets/11_memo_history.docx"
+      tag: "История России. 11 класс. Термины"
+      keyphrase: "бандеровцы"
+      topicsDelimeter: ") - "
+      trimSpaces: true
+      removeTrailingDot: true
+      isTable: true
+
+    - filename: "assets/11_memo.docx"
+      tag: "Обществознание. 11 класс. Термины"
+      keyphrase: "Абсентеизм"
+
+  dates:
+    - filename: "assets/11_memo_history.docx"
+      tag: "Всеобщая история. 11 класс. Хронология"
+      keyphrase: "5 марта 1946 года"
+      topicsDelimeter: " - "
+      isTable: true
+
+    - filename: "assets/11_memo_history.docx"
+      tag: "История России. 11 класс. Хронология"
+      keyphrase: "24 июня 1945 года"
+      topicsDelimeter: " - "
+      isTable: true
+
+ai:
+  copilot:
+    model: "gpt-4o-mini"
